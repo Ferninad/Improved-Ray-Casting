@@ -17,12 +17,10 @@ SDL_Rect pos;
 
 int screenWidth = 1000;
 int screenHeight = 500;
-int originx = 250;
-int originy = 250;
-int prevoriginx;
-int prevoriginy;
-double fineoriginx = 250;
-double fineoriginy = 250;
+double originx = 250;
+double originy = 250;
+double prevoriginx;
+double prevoriginy;
 double numarrays = 2000;
 double viewarrays = 500;
 double viewdirection = 0;
@@ -122,32 +120,29 @@ void Run()
     while (gameLoop)
     {   
         if(mode == "visualize" || mode == "fullvisualize"){
-            SDL_GetMouseState(&originx, &originy);
-            fineoriginx = originx;
-            fineoriginy = originy;
-            originx = static_cast<int>(fineoriginx);
-            originy = static_cast<int>(fineoriginy);
+            int mx, my;
+            SDL_GetMouseState(&mx, &my);
+            originx = mx;
+            originy = my;
         }
         else{
             prevoriginx = originx;
             prevoriginy = originy;
-            originx = static_cast<int>(fineoriginx);
-            originy = static_cast<int>(fineoriginy);
             if(w == true){
-                fineoriginx += cos(viewdirection) * 1;
-                fineoriginy += sin(viewdirection) * 1;
+                originx += cos(viewdirection) * 1;
+                originy += sin(viewdirection) * 1;
             }
             if(s == true){
-                fineoriginx -= cos(viewdirection) * 1;
-                fineoriginy -= sin(viewdirection) * 1;
+                originx -= cos(viewdirection) * 1;
+                originy -= sin(viewdirection) * 1;
             }
             if(a == true){
-                fineoriginx += cos(viewdirection-M_PI/2) * 1;
-                fineoriginy += sin(viewdirection-M_PI/2) * 1;
+                originx += cos(viewdirection-M_PI/2) * 1;
+                originy += sin(viewdirection-M_PI/2) * 1;
             }
             if(d == true){
-                fineoriginx += cos(viewdirection+M_PI/2) * 1;
-                fineoriginy += sin(viewdirection+M_PI/2) * 1;
+                originx += cos(viewdirection+M_PI/2) * 1;
+                originy += sin(viewdirection+M_PI/2) * 1;
             }
             double mininterx = 1000;
             double minintery = 1000;
@@ -170,8 +165,6 @@ void Run()
             if(mininterx != 1000){
                 originx = prevoriginx;
                 originy = prevoriginy;
-                fineoriginx = prevoriginx;
-                fineoriginy = prevoriginy;
             }
         }
         if(originx > 498)
@@ -364,7 +357,7 @@ void Draw(){
         dist.push_back({250-i, sqrt(pow(mininterx - originx, 2) + pow(minintery - originy, 2))});
     }
     for(int i = 0; i < dist.size(); i++){ //renders walls in right side of screen
-        double color = 255*1/((dist[i][1] * cos(abs(dist[i][0] - 250) * (M_PI/(360/viewwidth))/(viewarrays/2)))/90); //screenHeight * 90/dist[i][1];
+        double color = 255*1/((dist[i][1] * cos(abs(dist[i][0] - 250) * (M_PI/(360/viewwidth))/(viewarrays/2)))/85); //screenHeight * 90/dist[i][1];
         if(color > 240)
             color = 240;
         SDL_SetRenderDrawColor(renderer, color, color, color, 255);
